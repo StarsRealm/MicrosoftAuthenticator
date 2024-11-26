@@ -26,7 +26,6 @@ import com.sun.net.httpserver.HttpHandler;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.val;
-import net.clydo.msa.frame.WebFrame;
 import net.clydo.msa.responses.error.MicrosoftAuthenticatorException;
 import net.clydo.msa.util.MicrosoftAPI;
 import net.clydo.msa.util.MinecraftAPI;
@@ -100,54 +99,54 @@ public class MicrosoftAuthenticator {
      * @param authenticatorOptions The options for configuring the login window.
      * @return A CompletableFuture containing the authentication result.
      */
-    public CompletableFuture<AuthResult> asyncWebview(AuthenticatorOptions authenticatorOptions) {
-        val resultBuilder = AuthResult.builder();
-        this.setPhase(Phase.OPEN_LOGIN_PAGE);
-
-        val future = new CompletableFuture<AuthResult>();
-
-        // Initialize and clear cookies
-        Cookies.getOrCreate();
-
-        // Generate the authorization URL
-        val authorizeUrl = MicrosoftAPI.authorizeUrl();
-
-        // Start the webview with the authorization URL
-        val webFrame = new AtomicReference<>(new WebFrame(authenticatorOptions));
-
-        CompletableFuture.runAsync(() -> {
-            webFrame.get()
-                    .start(authorizeUrl)
-                    .thenAcceptAsync(code -> {
-                        try {
-                            // Acquire Microsoft account and start authentication
-                            val microsoftToken = MicrosoftAPI.acquireMicrosoftAccount(this, resultBuilder, code);
-                            if (microsoftToken != null) {
-                                this.authenticateByMSA(resultBuilder, microsoftToken.accessToken());
-                            }
-
-                            // Complete the authentication process
-                            future.complete(resultBuilder.build());
-                        } catch (Throwable throwable) {
-                            future.completeExceptionally(throwable);
-                        }
-                    }).exceptionally(throwable -> {
-                        // Handle exceptions during the webview process
-                        future.completeExceptionally(throwable instanceof MicrosoftAuthenticatorException exception ? exception : throwable);
-                        return null;
-                    });
-
-            while (true) {
-                if ((future.isDone() || future.isCompletedExceptionally() || future.isCancelled()) && (webFrame.get().getWebView() == null))
-                    break;
-            }
-
-            webFrame.get().close();
-            webFrame.set(null);
-        });
-
-        return future;
-    }
+//    public CompletableFuture<AuthResult> asyncWebview(AuthenticatorOptions authenticatorOptions) {
+//        val resultBuilder = AuthResult.builder();
+//        this.setPhase(Phase.OPEN_LOGIN_PAGE);
+//
+//        val future = new CompletableFuture<AuthResult>();
+//
+//        // Initialize and clear cookies
+//        Cookies.getOrCreate();
+//
+//        // Generate the authorization URL
+//        val authorizeUrl = MicrosoftAPI.authorizeUrl();
+//
+//        // Start the webview with the authorization URL
+//        val webFrame = new AtomicReference<>(new WebFrame(authenticatorOptions));
+//
+//        CompletableFuture.runAsync(() -> {
+//            webFrame.get()
+//                    .start(authorizeUrl)
+//                    .thenAcceptAsync(code -> {
+//                        try {
+//                            // Acquire Microsoft account and start authentication
+//                            val microsoftToken = MicrosoftAPI.acquireMicrosoftAccount(this, resultBuilder, code);
+//                            if (microsoftToken != null) {
+//                                this.authenticateByMSA(resultBuilder, microsoftToken.accessToken());
+//                            }
+//
+//                            // Complete the authentication process
+//                            future.complete(resultBuilder.build());
+//                        } catch (Throwable throwable) {
+//                            future.completeExceptionally(throwable);
+//                        }
+//                    }).exceptionally(throwable -> {
+//                        // Handle exceptions during the webview process
+//                        future.completeExceptionally(throwable instanceof MicrosoftAuthenticatorException exception ? exception : throwable);
+//                        return null;
+//                    });
+//
+//            while (true) {
+//                if ((future.isDone() || future.isCompletedExceptionally() || future.isCancelled()) && (webFrame.get().getWebView() == null))
+//                    break;
+//            }
+//
+//            webFrame.get().close();
+//            webFrame.set(null);
+//        });
+//
+//        return future;
+//    }
 
     /**
      * Initiates the authentication process using a refresh token or an access token, handling token expiration.
