@@ -78,41 +78,41 @@ public record AuthResult(
         AuthResultBuilder() {
         }
 
-        public AuthResultBuilder microsoftAccount(MicrosoftAccount microsoftAccount) {
+        public synchronized AuthResultBuilder microsoftAccount(MicrosoftAccount microsoftAccount) {
             this.microsoftAccount = microsoftAccount;
             return this;
         }
 
-        public AuthResultBuilder xblToken(XBLToken xblToken) {
+        public synchronized AuthResultBuilder xblToken(XBLToken xblToken) {
             this.xblToken = xblToken;
             return this;
         }
 
-        public AuthResultBuilder xstsToken(XSTSToken xstsToken) {
+        public synchronized AuthResultBuilder xstsToken(XSTSToken xstsToken) {
             this.xstsToken = xstsToken;
             return this;
         }
 
-        public AuthResultBuilder minecraftAccount(MinecraftAccount minecraftAccount) {
+        public synchronized AuthResultBuilder minecraftAccount(MinecraftAccount minecraftAccount) {
             this.minecraftAccount = minecraftAccount;
             return this;
         }
 
-        public AuthResultBuilder minecraftStore(MinecraftStore minecraftStore) {
+        public synchronized AuthResultBuilder minecraftStore(MinecraftStore minecraftStore) {
             this.minecraftStore = minecraftStore;
             return this;
         }
 
-        public AuthResultBuilder minecraftProfile(MinecraftProfile minecraftProfile) {
+        public synchronized AuthResultBuilder minecraftProfile(MinecraftProfile minecraftProfile) {
             this.minecraftProfile = minecraftProfile;
             return this;
         }
 
-        public AuthResult build() {
+        public synchronized AuthResult build() {
             return new AuthResult(this.microsoftAccount, this.xblToken, this.xstsToken, this.minecraftAccount, this.minecraftStore, this.minecraftProfile);
         }
 
-        public String toString() {
+        public synchronized String toString() {
             return "AuthResult.AuthResultBuilder(microsoftAccount=" + this.microsoftAccount + ", xblToken=" + this.xblToken + ", xstsToken=" + this.xstsToken + ", minecraftAccount=" + this.minecraftAccount + ", minecraftStore=" + this.minecraftStore + ", minecraftProfile=" + this.minecraftProfile + ")";
         }
     }

@@ -170,13 +170,11 @@ public class MicrosoftAuthenticator {
             }
 
             while (true) {
-                if (retryCount > 0) {
-                    // Refresh the Microsoft account access token
-                    val microsoftAccount = MicrosoftAPI.refreshToken(this, resultBuilder, refreshToken);
-                    if (microsoftAccount != null) {
-                        msaAccessToken = microsoftAccount.accessToken();
-                        //System.out.println(msaAccessToken);
-                    }
+                // Refresh the Microsoft account access token
+                val microsoftAccount = MicrosoftAPI.refreshToken(this, resultBuilder, refreshToken);
+                if (microsoftAccount != null) {
+                    msaAccessToken = microsoftAccount.accessToken();
+                    //System.out.println(msaAccessToken);
                 }
 
                 try {
